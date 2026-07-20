@@ -1,0 +1,47 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PhotoGrid from "../../components/PhotoGrid.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const albums = await getCollection("photography");
+  return albums.map((album) => ({
+    params: { slug: album.slug },
+    props: { album },
+  }));
+}
+
+const { album } = Astro.props;
+const { Content } = await album.render();
+---
+
+<BaseLayout title={album.data.title} description={album.data.description || album.data.title}>
+  <section class="mx-auto max-w-5xl px-4 py-16 sm:px-6">
+    <!-- Back link -->
+    <a
+      href="/photography"
+      class="mb-6 inline-flex items-center gap-1 text-sm text-slate-500 transition-colors hover:text-primary-600"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
+      </svg>
+      Back to Photography
+    </a>
+
+    <h1 class="mb-4 text-4xl font-bold text-slate-900">{album.data.title}</h1>
+
+    {album.data.description && (
+      <div class="prose mb-8">
+        <Content />
+      </div>
+    )}
+
+    <!-- Placeholder: replace with actual album photos -->
+    <div class="rounded-xl border border-slate-200 bg-slate-50 p-12 text-center shadow-sm">
+      <p class="text-lg text-slate-500">Photos coming soon</p>
+      <p class="mt-2 text-sm text-slate-400">
+        Add your photos to <code class="rounded bg-slate-100 px-1.5 py-0.5 text-xs">public/images/photography/{album.slug}/</code>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

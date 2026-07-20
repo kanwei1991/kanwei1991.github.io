@@ -1,0 +1,32 @@
+---
+export interface Props {
+  title: string;
+  subtitle?: string;
+  backgroundImage?: string;
+}
+
+const { title, subtitle, backgroundImage } = Astro.props;
+---
+
+<section
+  class="relative flex min-h-[40vh] items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-primary-900 to-slate-900 px-4 text-center"
+>
+  {backgroundImage && (
+    <img
+      src={backgroundImage}
+      alt=""
+      class="absolute inset-0 h-full w-full object-cover opacity-20"
+      loading="lazy"
+    />
+  )}
+  <div class="relative z-10 max-w-3xl">
+    <h1 class="mb-4 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+      {title}
+    </h1>
+    {subtitle && (
+      <p class="text-lg text-slate-300 sm:text-xl">
+        {subtitle}
+      </p>
+    )}
+  </div>
+</section>

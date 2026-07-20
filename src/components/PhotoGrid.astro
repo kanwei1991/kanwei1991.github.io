@@ -1,0 +1,98 @@
+---
+export interface Photo {
+  src: string;
+  alt: string;
+  caption?: string;
+}
+
+export interface Props {
+  photos: Photo[];
+  columns?: 2 | 3 | 4;
+}
+
+const { photos, columns = 3 } = Astro.props;
+
+const gridCols = {
+  2: "sm:grid-cols-2",
+  3: "sm:grid-cols-2 lg:grid-cols-3",
+  4: "sm:grid-cols-2 lg:grid-cols-4",
+};
+---
+
+<div class="grid grid-cols-1 gap-4 {gridCols[columns]}">
+  {photos.map((photo, i) => (
+    <button
+      class="group relative aspect-[4/3] cursor-pointer overflow-hidden rounded-xl bg-slate-100 shadow-sm transition-all hover:shadow-md"
+      data-photo-src={photo.src}
+      data-photo-alt={photo.alt}
+      data-photo-caption={photo.caption || ""}
+      onclick="openLightbox(this)"
+    >
+      <img
+        src={photo.src}
+        alt={photo.alt}
+        class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+        loading={i < 3 ? "eager" : "lazy"}
+      />
+      {photo.caption && (
+        <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-3 opacity-0 transition-opacity group-hover:opacity-100">
+          <p class="text-sm text-white">{photo.caption}</p>
+        </div>
+      )}
+    </button>
+  ))}
+</div>
+
+<!-- Lightbox -->
+<div id="lightbox" class="hidden lightbox-overlay" onclick="closeLightbox(event)">
+  <button
+    class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+    onclick="closeLightbox(event)"
+    aria-label="Close lightbox"
+    type="button"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  </button>
+  <img id="lightbox-img" src="" alt="" class="max-h-[85vh] max-w-[90vw] rounded-lg shadow-2xl" />
+  <p id="lightbox-caption" class="absolute bottom-6 left-1/2 -translate-x-1/2 text-center text-sm text-white/80"></p>
+</div>
+
+<script>
+  function openLightbox(el) {
+    const lightbox = document.getElementById("lightbox");
+    const img = document.getElementById("lightbox-img");
+    const caption = document.getElementById("lightbox-caption");
+
+    img.src = el.dataset.photoSrc;
+    img.alt = el.dataset.photoAlt;
+    caption.textContent = el.dataset.photoCaption;
+    caption.classList.toggle("hidden", !el.dataset.photoCaption);
+
+    lightbox.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeLightbox(e) {
+    if (e.target !== e.currentTarget && e.target.tagName !== "BUTTON") return;
+    const lightbox = document.getElementById("lightbox");
+    lightbox.classList.add("hidden");
+    document.body.style.overflow = "";
+  }
+
+  // Keyboard escape
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      const lightbox = document.getElementById("lightbox");
+      if (!lightbox.classList.contains("hidden")) {
+        lightbox.classList.add("hidden");
+        document.body.style.overflow = "";
+      }
+    }
+  });
+
+  // Expose for onclick handlers
+  window.openLightbox = openLightbox;
+  window.closeLightbox = closeLightbox;
+</script>

@@ -1,0 +1,93 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import type { CollectionEntry } from "astro:content";
+
+export interface Props {
+  entry: CollectionEntry<"courses"> | CollectionEntry<"labs"> | CollectionEntry<"blog"> | CollectionEntry<"photography">;
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.description || entry.data.title}>
+  <article class="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+    <!-- Back link -->
+    <a
+      href={"backHref" in Astro.props ? (Astro.props as any).backHref : "/"}
+      class="mb-6 inline-flex items-center gap-1 text-sm text-slate-500 transition-colors hover:text-primary-600"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
+      </svg>
+      Back
+    </a>
+
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-slate-900 sm:text-4xl">
+        {entry.data.title}
+      </h1>
+
+      <!-- Courses metadata -->
+      {"grade" in entry.data && entry.data.grade && (
+        <p class="mt-2 text-slate-500">Grade {entry.data.grade}</p>
+      )}
+      {"topics" in entry.data && entry.data.topics?.length > 0 && (
+        <div class="mt-3 flex flex-wrap gap-2">
+          {(entry.data as any).topics.map((topic: string) => (
+            <span class="rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-700">
+              {topic}
+            </span>
+          ))}
+        </div>
+      )}
+
+      <!-- Labs metadata -->
+      {"difficulty" in entry.data && (
+        <div class="mt-3 flex flex-wrap gap-4 text-sm text-slate-500">
+          <span>Difficulty: <strong>{(entry.data as any).difficulty}</strong></span>
+          {"duration" in entry.data && entry.data.duration && (
+            <span>Duration: <strong>{entry.data.duration}</strong></span>
+          )}
+        </div>
+      )}
+      {"equipment" in entry.data && (entry.data as any).equipment?.length > 0 && (
+        <div class="mt-3">
+          <p class="mb-1 text-sm font-medium text-slate-700">Equipment:</p>
+          <ul class="flex flex-wrap gap-2">
+            {(entry.data as any).equipment.map((item: string) => (
+              <li class="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <!-- Blog metadata -->
+      {"date" in entry.data && entry.data.date && (
+        <p class="mt-2 text-sm text-slate-500">
+          {entry.data.date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        </p>
+      )}
+      {"tags" in entry.data && (entry.data as any).tags?.length > 0 && (
+        <div class="mt-3 flex flex-wrap gap-2">
+          {(entry.data as any).tags.map((tag: string) => (
+            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
+              #{tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </header>
+
+    <!-- Content -->
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>

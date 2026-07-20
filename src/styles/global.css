@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white text-slate-800 antialiased;
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+
+  ::selection {
+    @apply bg-blue-200 text-blue-900;
+  }
+}
+
+/* Photo lightbox */
+.lightbox-overlay {
+  @apply fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.lightbox-overlay img {
+  @apply max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl;
+  animation: scaleIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* KaTeX math styling */
+.katex {
+  font-size: 1.1em !important;
+}
+
+/* Prose styles for blog/course content */
+.prose {
+  @apply max-w-none;
+}
+
+.prose h2 {
+  @apply mt-10 mb-4 text-2xl font-bold text-slate-900;
+}
+
+.prose h3 {
+  @apply mt-8 mb-3 text-xl font-semibold text-slate-900;
+}
+
+.prose p {
+  @apply mb-4 leading-relaxed text-slate-700;
+}
+
+.prose ul, .prose ol {
+  @apply mb-4 pl-6;
+}
+
+.prose li {
+  @apply mb-2 text-slate-700;
+}
+
+.prose strong {
+  @apply font-semibold text-slate-900;
+}
+
+.prose a {
+  @apply text-blue-600 underline decoration-blue-300 underline-offset-2 transition-colors hover:text-blue-800 hover:decoration-blue-500;
+}
+
+.prose blockquote {
+  @apply border-l-4 border-blue-300 bg-blue-50/50 px-6 py-3 italic text-slate-600;
+}
+
+.prose code {
+  @apply rounded bg-slate-100 px-1.5 py-0.5 text-sm font-mono text-slate-800;
+}
+
+.prose pre {
+  @apply my-6 overflow-x-auto rounded-lg bg-slate-900 p-4 text-sm text-slate-100;
+}
+
+.prose img {
+  @apply my-8 rounded-lg shadow-md;
+}
+
+.prose hr {
+  @apply my-10 border-slate-200;
+}

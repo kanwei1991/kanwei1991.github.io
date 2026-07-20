@@ -1,0 +1,49 @@
+---
+export interface Props {
+  title: string;
+  slug: string;
+  grade?: string;
+  topics?: string[];
+  featuredImage?: string;
+}
+
+const { title, slug, grade, topics = [], featuredImage } = Astro.props;
+---
+
+<a
+  href={`/courses/${slug}`}
+  class="group block overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-md"
+>
+  {featuredImage ? (
+    <div class="aspect-video overflow-hidden bg-slate-100">
+      <img
+        src={featuredImage}
+        alt={title}
+        class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+        loading="lazy"
+      />
+    </div>
+  ) : (
+    <div class="flex aspect-video items-center justify-center bg-gradient-to-br from-primary-100 to-primary-200">
+      <span class="text-4xl font-bold text-primary-600">⚛</span>
+    </div>
+  )}
+  <div class="p-4">
+    <h3 class="mb-1 text-lg font-semibold text-slate-900 group-hover:text-primary-600">
+      {title}
+    </h3>
+    {grade && <p class="mb-2 text-sm text-slate-500">Grade {grade}</p>}
+    {topics.length > 0 && (
+      <div class="flex flex-wrap gap-1.5">
+        {topics.slice(0, 3).map((topic) => (
+          <span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">
+            {topic}
+          </span>
+        ))}
+        {topics.length > 3 && (
+          <span class="text-xs text-slate-400">+{topics.length - 3}</span>
+        )}
+      </div>
+    )}
+  </div>
+</a>

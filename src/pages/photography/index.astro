@@ -1,0 +1,70 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PhotoGrid from "../../components/PhotoGrid.astro";
+import { getCollection } from "astro:content";
+
+const albums = await getCollection("photography", ({ data }) => data.published !== false);
+
+// Sample photos — replace with actual photos
+const samplePhotos = [
+  { src: "/images/photography/placeholder-1.jpg", alt: "Landscape photograph", caption: "Landscapes" },
+  { src: "/images/photography/placeholder-2.jpg", alt: "Nature detail photograph", caption: "Nature in Detail" },
+  { src: "/images/photography/placeholder-3.jpg", alt: "Urban photography", caption: "Urban Scenes" },
+].filter(() => false); // Hidden until actual photos are added
+---
+
+<BaseLayout title="Photography" description="Photography by Robert Kan — capturing the world through a lens.">
+  <section class="mx-auto max-w-5xl px-4 py-16 sm:px-6">
+    <h1 class="mb-2 text-4xl font-bold text-slate-900">Photography</h1>
+    <p class="mb-4 text-lg text-slate-600">
+      Capturing the world through a lens — light, shadow, and the physics of seeing.
+    </p>
+
+    <!-- Albums -->
+    {albums.length > 0 && (
+      <div class="mb-12 grid gap-6 sm:grid-cols-2">
+        {albums.map((album) => (
+          <a
+            href={`/photography/${album.slug}`}
+            class="group relative aspect-[16/9] overflow-hidden rounded-xl bg-slate-100 shadow-sm transition-all hover:shadow-md"
+          >
+            {album.data.coverImage ? (
+              <img
+                src={album.data.coverImage}
+                alt={album.data.title}
+                class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                loading="lazy"
+              />
+            ) : (
+              <div class="flex h-full items-center justify-center bg-gradient-to-br from-primary-100 to-primary-200">
+                <span class="text-4xl">📷</span>
+              </div>
+            )}
+            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+            <div class="absolute bottom-0 p-5">
+              <h2 class="text-xl font-bold text-white">{album.data.title}</h2>
+              {album.data.description && (
+                <p class="mt-1 text-sm text-white/80">{album.data.description}</p>
+              )}
+            </div>
+          </a>
+        ))}
+      </div>
+    )}
+
+    <!-- Gallery grid -->
+    {samplePhotos.length > 0 ? (
+      <>
+        <h2 class="mb-6 text-2xl font-bold text-slate-900">Gallery</h2>
+        <PhotoGrid photos={samplePhotos} columns={3} />
+      </>
+    ) : (
+      <div class="rounded-xl border border-slate-200 bg-white p-12 text-center shadow-sm">
+        <p class="mb-2 text-lg text-slate-500">Photo gallery coming soon.</p>
+        <p class="text-sm text-slate-400">
+          Add your photos to <code class="rounded bg-slate-100 px-1.5 py-0.5 text-xs">public/images/photography/</code> and they'll appear here.
+        </p>
+      </div>
+    )}
+  </section>
+</BaseLayout>

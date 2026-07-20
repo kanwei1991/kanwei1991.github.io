@@ -1,0 +1,40 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="border-t border-slate-200 bg-slate-50">
+  <div class="mx-auto max-w-5xl px-4 py-10 sm:px-6">
+    <div class="grid gap-8 sm:grid-cols-3">
+      <!-- Brand -->
+      <div>
+        <h3 class="mb-2 text-lg font-bold text-slate-900">Robert Kan</h3>
+        <p class="text-sm text-slate-500">Physics Educator</p>
+      </div>
+
+      <!-- Quick links -->
+      <div>
+        <h4 class="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-500">Pages</h4>
+        <ul class="space-y-2 text-sm text-slate-600">
+          <li><a href="/" class="transition-colors hover:text-primary-600">Home</a></li>
+          <li><a href="/about" class="transition-colors hover:text-primary-600">About</a></li>
+          <li><a href="/courses" class="transition-colors hover:text-primary-600">Courses</a></li>
+          <li><a href="/blog" class="transition-colors hover:text-primary-600">Blog</a></li>
+        </ul>
+      </div>
+
+      <!-- Social -->
+      <div>
+        <h4 class="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-500">Connect</h4>
+        <ul class="space-y-2 text-sm text-slate-600">
+          <li>
+            <a href="/contact" class="transition-colors hover:text-primary-600">Get in touch →</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-8 border-t border-slate-200 pt-6 text-center text-sm text-slate-400">
+      &copy; {currentYear} Robert Kan. All rights reserved.
+    </div>
+  </div>
+</footer>

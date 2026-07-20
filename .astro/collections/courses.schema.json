@@ -1,0 +1,54 @@
+{
+  "$ref": "#/definitions/courses",
+  "definitions": {
+    "courses": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "grade": {
+          "type": "string"
+        },
+        "topics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "featuredImage": {
+          "type": "string"
+        },
+        "published": {
+          "type": "boolean",
+          "default": true
+        },
+        "date": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "integer",
+              "format": "unix-time"
+            }
+          ]
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

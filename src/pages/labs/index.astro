@@ -1,0 +1,57 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const labs = await getCollection("labs", ({ data }) => data.published !== false);
+labs.sort((a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0));
+
+const difficultyColors: Record<string, string> = {
+  beginner: "bg-green-100 text-green-700",
+  intermediate: "bg-yellow-100 text-yellow-700",
+  advanced: "bg-red-100 text-red-700",
+};
+---
+
+<BaseLayout title="Lab Experiments" description="Physics lab experiments with procedures, data analysis, and insights.">
+  <section class="mx-auto max-w-5xl px-4 py-16 sm:px-6">
+    <h1 class="mb-2 text-4xl font-bold text-slate-900">Lab Experiments</h1>
+    <p class="mb-10 text-lg text-slate-600">
+      Hands-on physics experiments designed for the classroom. Each lab includes objectives, procedure, data tables, and analysis.
+    </p>
+
+    {labs.length > 0 ? (
+      <div class="grid gap-6 sm:grid-cols-2">
+        {labs.map((lab) => (
+          <a
+            href={`/labs/${lab.slug}`}
+            class="group rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md"
+          >
+            <h2 class="mb-2 text-xl font-bold text-slate-900 group-hover:text-primary-600">
+              {lab.data.title}
+            </h2>
+            {lab.data.objective && (
+              <p class="mb-3 text-sm text-slate-600">{lab.data.objective}</p>
+            )}
+            <div class="flex flex-wrap items-center gap-3">
+              <span class={`rounded-full px-2.5 py-0.5 text-xs font-medium ${difficultyColors[lab.data.difficulty] || "bg-slate-100 text-slate-600"}`}>
+                {lab.data.difficulty}
+              </span>
+              {lab.data.duration && (
+                <span class="text-xs text-slate-400">⏱ {lab.data.duration}</span>
+              )}
+              {lab.data.equipment && lab.data.equipment.length > 0 && (
+                <span class="text-xs text-slate-400">
+                  🔧 {lab.data.equipment.length} items
+                </span>
+              )}
+            </div>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <div class="rounded-xl border border-slate-200 bg-white p-12 text-center shadow-sm">
+        <p class="text-lg text-slate-500">Lab experiments coming soon.</p>
+      </div>
+    )}
+  </section>
+</BaseLayout>

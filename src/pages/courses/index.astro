@@ -1,0 +1,35 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import CourseCard from "../../components/CourseCard.astro";
+import { getCollection } from "astro:content";
+
+const courses = await getCollection("courses", ({ data }) => data.published !== false);
+courses.sort((a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0));
+---
+
+<BaseLayout title="Courses" description="Physics courses taught by Robert Kan — AP Physics, IB Physics, and more.">
+  <section class="mx-auto max-w-5xl px-4 py-16 sm:px-6">
+    <h1 class="mb-2 text-4xl font-bold text-slate-900">Courses</h1>
+    <p class="mb-10 text-lg text-slate-600">
+      Explore the courses I teach — curriculum overviews, key topics, and lab requirements.
+    </p>
+
+    {courses.length > 0 ? (
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {courses.map((course) => (
+          <CourseCard
+            title={course.data.title}
+            slug={course.slug}
+            grade={course.data.grade}
+            topics={course.data.topics}
+            featuredImage={course.data.featuredImage}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="rounded-xl border border-slate-200 bg-white p-12 text-center shadow-sm">
+        <p class="text-lg text-slate-500">Course content coming soon.</p>
+      </div>
+    )}
+  </section>
+</BaseLayout>
